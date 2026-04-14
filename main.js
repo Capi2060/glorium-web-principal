@@ -3,13 +3,13 @@
  * Aquí se controla todo lo de la web.
  */
 
-// --- CONFIGURACIí“N ---
+// --- CONFIGURACIÓN ---
 const APPLICATIONS_OPEN = true; // <--- CAMBIAR ESTO A true PARA ABRIR LAS POSTULACIONES o a false PARA CERRARLAS
-const FORM_URL = "https://docs.google.com/forms/u/0/d/1kpJYwKzMHqvJimgMV382xUl-98IPb3hEIEVEW-ly0YI/viewform?pli=1&usp=sharing_eip_se_dm&ts=69de7184&pli=1&authuser=0&edit_requested=true"; // Poner aquí el link del formulario de postulaciones
+const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeAHFPW3DWU8EoGVuiMSHutyRH_ys73J7Tr8KYw8XrYoDtEmw/viewform?usp=dialog"; // Poner aquí el link del formulario de postulaciones
 
 // En la linea 1005 se activa o desactiva la aparicion del staff del mes - true para mostrarlo y false para ocultarlo
 
-// --- CONFIGURACIí“N ---
+// --- CONFIGURACIÓN ---
 
 document.addEventListener('DOMContentLoaded', () => {
     initLayout();      // Cargar Navbar y Footer
