@@ -4,8 +4,8 @@
  */
 
 // --- CONFIGURACIí“N ---
-const APPLICATIONS_OPEN = false; // <--- CAMBIAR ESTO A true PARA ABRIR LAS POSTULACIONES o a false PARA CERRARLAS
-const FORM_URL = "https://forms.google.com/tu-formulario"; // Poner aquí el link del formulario de postulaciones
+const APPLICATIONS_OPEN = true; // <--- CAMBIAR ESTO A true PARA ABRIR LAS POSTULACIONES o a false PARA CERRARLAS
+const FORM_URL = "https://docs.google.com/forms/u/0/d/1kpJYwKzMHqvJimgMV382xUl-98IPb3hEIEVEW-ly0YI/viewform?pli=1&usp=sharing_eip_se_dm&ts=69de7184&pli=1&authuser=0&edit_requested=true"; // Poner aquí el link del formulario de postulaciones
 
 // En la linea 1005 se activa o desactiva la aparicion del staff del mes - true para mostrarlo y false para ocultarlo
 
@@ -360,7 +360,7 @@ function fallbackCopyTextToClipboard(text) {
     textArea.select();
     try {
         var successful = document.execCommand('copy');
-        if(successful) showToast("¡IP Copiada! Te esperamos dentro.", "success");
+        if (successful) showToast("¡IP Copiada! Te esperamos dentro.", "success");
         else showToast("No se pudo copiar la IP :(", "error");
     } catch (err) {
         showToast("No se pudo copiar la IP :(", "error");
@@ -753,7 +753,7 @@ function initMouseParticles() {
 
     // Add particle on movement
     window.addEventListener('mousemove', (e) => {
-        
+
         // Subtle Trail: Smaller, more frequent but transparent
         trail.push({
             x: e.clientX,
@@ -765,7 +765,7 @@ function initMouseParticles() {
 
     // Click Explosion
     window.addEventListener('mousedown', (e) => {
-        
+
         for (let i = 0; i < 12; i++) { // Fewer particles
             const angle = Math.random() * Math.PI * 2;
             const speed = Math.random() * 2 + 0.5; // Slower explosion
@@ -783,7 +783,7 @@ function initMouseParticles() {
     function animate() {
         ctx.clearRect(0, 0, width, height);
 
-        
+
 
         // Draw Comet Trail
         for (let i = 0; i < trail.length; i++) {
