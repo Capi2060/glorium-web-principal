@@ -1,0 +1,914 @@
+/**
+ * Lógica Principal de Glorium Network
+ * Aquí se controla todo lo de la web.
+ */
+
+// --- CONFIGURACIí“N ---
+const APPLICATIONS_OPEN = false; // <--- CAMBIAR ESTO A true PARA ABRIR LAS POSTULACIONES o a false PARA CERRARLAS
+const FORM_URL = "https://forms.google.com/tu-formulario"; // Poner aquí el link del formulario de postulaciones
+
+// En la linea 1005 se activa o desactiva la aparicion del staff del mes - true para mostrarlo y false para ocultarlo
+
+// --- CONFIGURACIí“N ---
+
+document.addEventListener('DOMContentLoaded', () => {
+    initLayout();      // Cargar Navbar y Footer
+    initAnimations();  // Iniciar animaciones de scroll
+    loadNews();        // Cargar noticias
+    initTabs();        // Lógica de las pestañas de reglas
+    initApplyLogic();  // Lógica de las postulaciones (Nuevo)
+    initRoleModals();  // Lógica de Modals de Roles
+    initServerStatus(); // Iniciar contador de jugadores - 735
+    initRulesSearch(); // Buscador de reglas
+    initSpotlightModal(); // Staff del mes (FAB)
+});
+
+// --- Inyección del Layout (Navbar y Footer) ---
+
+function initLayout() {
+    // Detectar si estoy en una subcarpeta para arreglar las rutas
+    const isPagesDir = window.location.pathname.includes('/pages/');
+    const basePath = isPagesDir ? '../' : './';
+    const pagesPath = isPagesDir ? './' : './pages/';
+
+    const navbarContainer = document.getElementById('navbar-container');
+    if (navbarContainer) {
+        navbarContainer.innerHTML = `
+            <!-- Desktop Pill Navbar -->
+            <div class="nav-pill-container">
+                <div class="nav-highlight"></div> 
+                
+                <a href="${basePath}index.html" class="nav-pill-item" data-page="index.html">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Inicio</span>
+                </a>
+                <a href="${pagesPath}news.html" class="nav-pill-item" data-page="news.html">
+                    <i class="fa-solid fa-newspaper"></i>
+                    <span>Noticias</span>
+                </a>
+                <a href="${pagesPath}vote.html" class="nav-pill-item" data-page="vote.html">
+                    <i class="fa-solid fa-gem"></i>
+                    <span>Votar</span>
+                </a>
+                <a href="${pagesPath}rules.html" class="nav-pill-item" data-page="rules.html">
+                    <i class="fa-solid fa-book"></i>
+                    <span>Reglas</span>
+                </a>
+                
+                <a href="${pagesPath}apply.html" class="nav-pill-item" data-page="apply.html">
+                    <i class="fa-solid fa-pen-nib"></i>
+                    <span>Postulaciones</span>
+                </a>
+                <a href="${pagesPath}staff.html" class="nav-pill-item" data-page="staff.html">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Equipo</span>
+                </a>
+
+                <div class="nav-separator"></div>
+
+                <a href="https://glorium-network.tebex.io/" target="_blank" class="nav-pill-item store-link">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span>Tienda</span>
+                </a>
+
+
+            </div>
+
+            <!-- Mobile Navbar Trigger -->
+            <button id="mobile-menu-btn" class="mobile-nav-trigger">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <!-- Mobile Menu Overlay -->
+            <div id="mobile-menu-overlay" class="mobile-menu-overlay">
+                <button id="mobile-menu-close" class="mobile-close-btn"><i class="fa-solid fa-xmark"></i></button>
+                <div class="mobile-nav-links">
+                    <a href="${basePath}index.html" class="mobile-nav-item">Inicio</a>
+                    <a href="${pagesPath}news.html" class="mobile-nav-item">Noticias</a>
+                    <a href="${pagesPath}vote.html" class="mobile-nav-item">Votar</a>
+                    <a href="${pagesPath}rules.html" class="mobile-nav-item">Reglas</a>
+                    <a href="${pagesPath}apply.html" class="mobile-nav-item">Postulaciones</a>
+                    <a href="${pagesPath}staff.html" class="mobile-nav-item">Equipo</a>
+                    <a href="https://glorium-network.tebex.io/" target="_blank" class="mobile-nav-item" style="color: var(--primary-blue);">Tienda</a>
+                </div>
+
+            </div>
+        `;
+
+        initMouseParticles();
+
+        // Lógica para marcar el enlace activo y mover el highlight
+        const currentFile = window.location.pathname.split('/').pop() || 'index.html';
+        const links = document.querySelectorAll('.nav-pill-item:not(.store-link)');
+        const highlight = document.querySelector('.nav-highlight');
+        let currentTarget = null; // Elemento que debería tener el highlight ahora mismo
+
+        function moveHighlight(element) {
+            if (!element || !highlight) return;
+            // Cálculos para la posición
+            const width = element.offsetWidth;
+            const left = element.offsetLeft;
+
+            highlight.style.width = `${width}px`;
+            highlight.style.left = `${left}px`;
+            highlight.style.opacity = '1';
+        }
+
+        // Observer para detectar cuando los items cambian de tamaño (al expandirse el texto)
+        // NOTA: Si uno cambia de tamaño, empuja a los demás. Así que si cualquiera cambia,
+        // recalculamos la posición del target actual.
+        const resizeObserver = new ResizeObserver(entries => {
+            if (currentTarget) {
+                moveHighlight(currentTarget);
+            }
+        });
+
+        let activeLink = null;
+
+        links.forEach(link => {
+            const page = link.getAttribute('data-page');
+
+            // Detectar activo inicial
+            if (page && currentFile.includes(page)) {
+                link.classList.add('active');
+                activeLink = link;
+            } else if ((currentFile === '' || currentFile === '/') && page === 'index.html') {
+                link.classList.add('active');
+                activeLink = link;
+            }
+
+            // Observar cambios de tamaño
+            resizeObserver.observe(link);
+
+            // Eventos Hover
+            link.addEventListener('mouseenter', () => {
+                currentTarget = link;
+                moveHighlight(link);
+            });
+        });
+
+        // Establecer target inicial
+        if (activeLink) currentTarget = activeLink;
+
+        const container = document.querySelector('.nav-pill-container');
+        if (container) {
+            container.addEventListener('mouseleave', () => {
+                // Al salir del contenedor, volvemos al activo (si hay)
+                if (activeLink) {
+                    currentTarget = activeLink;
+                    moveHighlight(activeLink);
+                } else {
+                    currentTarget = null;
+                    highlight.style.opacity = '0';
+                }
+            });
+        }
+
+        // Posición Inicial
+        setTimeout(() => {
+            if (activeLink) {
+                currentTarget = activeLink;
+                moveHighlight(activeLink);
+            }
+        }, 100);
+
+        // Listener para redimensionamiento de ventana
+        window.addEventListener('resize', () => {
+            if (currentTarget) moveHighlight(currentTarget);
+        });
+
+        // Init Mobile Menu Logic
+        initMobileMenu();
+    }
+
+    // Inyectar el Footer
+    const footerContainer = document.getElementById('footer-container');
+    if (footerContainer) {
+        footerContainer.innerHTML = `
+            <footer>
+                <div class="container">
+                    <div class="footer-socials">
+                        <a href="https://discord.gg/AcNusmyx" target="_blank" class="social-icon"><i class="fa-brands fa-discord"></i></a>
+                        <a href="#" class="social-icon"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#" class="social-icon"><i class="fa-brands fa-tiktok"></i></a>
+                    </div>
+                    <p style="color: var(--text-dim);">&copy; 2026 Glorium Network. Todos los derechos reservados.</p>
+                    <p style="font-size: 0.8rem; color: #555; margin-top: 10px;">No afiliado con Mojang AB.</p>
+                </div>
+            </footer>
+        `;
+    }
+}
+
+function initMobileMenu() {
+    const trigger = document.getElementById('mobile-menu-btn');
+    const closeBtn = document.getElementById('mobile-menu-close');
+    const overlay = document.getElementById('mobile-menu-overlay');
+    const links = document.querySelectorAll('.mobile-nav-item');
+
+    if (!trigger || !overlay) return;
+
+    function openMenu() {
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Block scroll
+    }
+
+    function closeMenu() {
+        overlay.classList.remove('active');
+        document.body.style.overflow = ''; // Release scroll
+    }
+
+    trigger.addEventListener('click', openMenu);
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+
+    // Close when clicking a link
+    links.forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+}
+
+
+// --- Lógica de Pestañas (Reglas) ---
+function initTabs() {
+    // Un pequeño delay para asegurar que el DOM ha cargado
+    setTimeout(() => {
+        const tabs = document.querySelectorAll('.tab-btn');
+        const contents = document.querySelectorAll('.tab-content');
+
+        if (tabs.length === 0) return;
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const clickedTab = e.currentTarget;
+                const targetId = clickedTab.getAttribute('data-target');
+
+                // Desactivar todo
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.style.display = 'none'); // Forzar ocultar
+                contents.forEach(c => c.classList.remove('active'));
+
+                // Activar el clickeado
+                clickedTab.classList.add('active');
+                const targetContent = document.getElementById(targetId);
+                if (targetContent) {
+                    targetContent.style.display = 'block'; // Forzar mostrar
+                    setTimeout(() => targetContent.classList.add('active'), 10); // Efecto fade in
+                }
+            });
+        });
+    }, 300);
+}
+
+// --- Lógica de Postulaciones ---
+function initApplyLogic() {
+    const applyBtn = document.getElementById('apply-btn');
+    const statusBadge = document.getElementById('apply-status');
+    const statusText = document.getElementById('status-text');
+    const openContent = document.getElementById('apply-open-content');
+    const closedNotice = document.getElementById('apply-closed-notice');
+
+    // Compruebo si existe el badge para actualizar el estado visual
+    if (statusBadge) {
+        if (APPLICATIONS_OPEN) {
+            statusBadge.className = 'status-badge open';
+            statusBadge.innerHTML = '<i class="fa-solid fa-check"></i> ABIERTAS';
+            statusText.innerHTML = "Actualmente estamos buscando nuevo personal.";
+            statusText.style.color = "#4ade80"; // Verde
+
+            if (openContent) openContent.style.display = 'block';
+            if (closedNotice) closedNotice.style.display = 'none';
+        } else {
+            statusBadge.className = 'status-badge closed';
+            statusBadge.innerHTML = '<i class="fa-solid fa-lock"></i> CERRADAS';
+            statusText.innerHTML = "No estamos aceptando solicitudes por el momento.";
+            statusText.style.color = "#ef4444"; // Rojo
+
+            if (openContent) openContent.style.display = 'none';
+            if (closedNotice) closedNotice.style.display = 'block';
+        }
+    }
+
+    // Listener del botón
+    if (applyBtn) {
+        applyBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (APPLICATIONS_OPEN) {
+                // Si están abiertas, abro el formulario
+                window.open(FORM_URL, '_blank');
+            } else {
+                // Si no, tiro un error bonito
+                showToast("Las postulaciones están cerradas actualmente.", "error");
+            }
+        });
+    }
+}
+
+// --- Notificaciones (Toasts Premium) ---
+
+function showToast(message, type = 'info') {
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+
+    let icon = 'fa-circle-info';
+    if (type === 'success') icon = 'fa-circle-check';
+    if (type === 'error') icon = 'fa-circle-xmark';
+    if (type === 'warning') icon = 'fa-triangle-exclamation';
+
+    toast.innerHTML = `
+        <div class="toast-icon ${type}"><i class="fa-solid ${icon}"></i></div>
+        <div class="toast-content">${message}</div>
+    `;
+
+    container.appendChild(toast);
+
+    // Animación de entrada y salida
+    setTimeout(() => {
+        toast.style.animation = 'toastOut 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
+        setTimeout(() => toast.remove(), 500);
+    }, 4000);
+}
+
+// --- Funcionalidades Extra ---
+
+window.copyIP = function () {
+    const ip = "glorium.fun";
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(ip).then(() => {
+            showToast("¡IP Copiada! Te esperamos dentro.", "success");
+        }).catch(err => fallbackCopyTextToClipboard(ip));
+    } else {
+        fallbackCopyTextToClipboard(ip);
+    }
+}
+
+function fallbackCopyTextToClipboard(text) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+        var successful = document.execCommand('copy');
+        if(successful) showToast("¡IP Copiada! Te esperamos dentro.", "success");
+        else showToast("No se pudo copiar la IP :(", "error");
+    } catch (err) {
+        showToast("No se pudo copiar la IP :(", "error");
+    }
+    document.body.removeChild(textArea);
+}
+
+// --- Cargador de Noticias (Home) ---
+
+// --- Cargador de Noticias (News Page) ---
+
+/*
+ * LISTA DE ESTILOS PARA BADGES (Etiquetas de Noticias)
+ * Usa estas clases en la propiedad "badgeClass" de cada noticia:
+ *
+ * 1. NEON (Pulsante):
+ *    badge-neon-red, badge-neon-blue, badge-neon-green, badge-neon-yellow,
+ *    badge-neon-purple, badge-neon-pink, badge-neon-orange, badge-neon-cyan,
+ *    badge-neon-gold, badge-neon-white
+ *
+ * 2. GLASS (Transparente/Vidrio):
+ *    badge-glass-red, badge-glass-blue, badge-glass-green, badge-glass-yellow,
+ *    badge-glass-purple, badge-glass-pink, badge-glass-orange, badge-glass-cyan,
+ *    badge-glass-gold, badge-glass-white
+ *
+ * 3. GRADIENT (Degradados Vibrantes):
+ *    badge-grad-sunset, badge-grad-ocean, badge-grad-forest, badge-grad-royal,
+ *    badge-grad-fire, badge-grad-night, badge-grad-lemon, badge-grad-berry,
+ *    badge-grad-teal, badge-grad-gold
+ *
+ * 4. COSMIC (Espacial Animado):
+ *    badge-cosmic (Morado/Rosa), badge-cosmic-blue, badge-cosmic-red, badge-cosmic-gold
+ *
+ * 5. METAL (Metálico Brillante):
+ *    badge-metal-silver, badge-metal-gold, badge-metal-copper
+ *
+ * 6. OTROS ESTILOS:
+ *    badge-fire (Efecto Fuego Animado)
+ *    badge-glitch (Efecto Cyberpunk)
+ *    badge-frosted-ice (Efecto Hielo)
+ *    badge-holo (Holográfico)
+ *
+ * 7. OUTLINE (Borde Simple):
+ *    badge-outline-red, badge-outline-blue, badge-outline-gold, badge-outline-white
+ *
+ * 8. SOLID (Color Plano):
+ *    badge-solid-red, badge-solid-blue, badge-solid-black
+ */
+
+function loadNews() {
+    const newsGrid = document.getElementById('news-grid-container');
+    if (!newsGrid) return; // Si no estoy en la página de noticias, me salgo
+
+    const newsData = []; // Array vacío para página virgen
+
+    newsGrid.innerHTML = '';
+
+    if (newsData.length === 0) {
+        newsGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 50px 20px; background: rgba(59, 130, 246, 0.05); border-radius: 15px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                <i class="fa-regular fa-newspaper" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 20px;"></i>
+                <h3 style="color: var(--text-light); margin-bottom: 10px;">Aún no hay noticias publicadas</h3>
+                <p style="color: var(--text-dim);">Pronto anunciaremos eventos, actualizaciones y novedades de Glorium Network.</p>
+            </div>
+        `;
+    } else {
+        newsData.forEach((news, index) => {
+            const article = document.createElement('article');
+
+            // --- Noticia Destacada (Featured) ---
+            if (index === 0 && news.featured) {
+                article.className = 'news-card-featured';
+                article.innerHTML = `
+                    <span class="${news.badgeClass}" data-text="${news.tag}">${news.tag}</span>
+                    <div class="news-content">
+                        <h2 class="news-title">${news.title}</h2>
+                        <div class="news-date"><i class="fa-regular fa-calendar"></i> ${news.date}</div>
+                        <p class="news-excerpt">${news.excerpt}</p>
+                        <button class="btn btn-primary open-modal-btn">
+                            Leer Artículo <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+                        </button>
+                    </div>
+                `;
+            }
+            // --- Noticias Normales ---
+            else {
+                article.className = 'news-card';
+                article.innerHTML = `
+                    <span class="${news.badgeClass}" data-text="${news.tag}">${news.tag}</span>
+                    <div class="news-date"><i class="fa-regular fa-calendar"></i> ${news.date}</div>
+                    <h3 class="news-title"><i class="fa-solid ${news.icon}" style="color: var(--primary-blue); font-size: 0.8em; margin-right: 8px;"></i>${news.title}</h3>
+                    <p class="news-excerpt">${news.excerpt}</p>
+                    <button class="read-more-link open-modal-btn" style="background:none; border:none; cursor:pointer; font-family:inherit; font-size: 0.9rem;">
+                        Leer más <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                `;
+            }
+
+            // Añadir Listener para abrir modal
+            const btn = article.querySelector('.open-modal-btn');
+            if (btn) {
+                btn.addEventListener('click', () => openNewsModal(news));
+            }
+
+            newsGrid.appendChild(article);
+        });
+
+        initModalLogic();
+    }
+}
+
+// --- Lógica del Modal ---
+function openNewsModal(news) {
+    const modal = document.getElementById('news-modal');
+    if (!modal) return;
+
+    // Rellenar datos
+    const tagEl = document.getElementById('modal-tag');
+    tagEl.textContent = news.tag;
+    tagEl.className = news.badgeClass || 'news-tag'; // Fallback
+
+    document.getElementById('modal-title').textContent = news.title;
+    document.getElementById('modal-date').innerHTML = `<i class="fa-regular fa-calendar"></i> ${news.date}`;
+    document.getElementById('modal-body-content').innerHTML = news.content;
+
+    // Mostrar modal
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden'; // Bloquear scroll de fondo
+}
+
+function initModalLogic() {
+    const modal = document.getElementById('news-modal');
+    const closeBtn = document.querySelector('.close-modal');
+
+    if (!modal || !closeBtn) return;
+
+    // Cerrar con botón X
+    closeBtn.onclick = () => closeModal();
+
+    // Cerrar con click fuera
+    window.onclick = (event) => {
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('news-modal');
+    if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = 'auto'; // Restaurar scroll
+    }
+}
+
+// --- Animaciones al hacer Scroll ---
+
+function initAnimations() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.card, .vote-item, .section-title, .rule-category, .staff-card, .vote-card, .gallery-item').forEach(el => {
+        el.style.opacity = '0';
+        observer.observe(el);
+    });
+}
+
+
+function initRoleModals() {
+    const backdrop = document.getElementById('role-modal');
+    const closeBtn = document.querySelector('#role-modal .close-modal');
+    const roleButtons = document.querySelectorAll('.role-info-btn');
+
+    if (!backdrop || !closeBtn) return;
+
+    // Data definition for roles
+    const roleData = {
+        'owner': {
+            title: 'Dueño',
+            desc: 'El corazón y la mente detrás de Glorium. Son quienes soñaron este universo y trabajan cada día para mantenerlo vivo.',
+            reason: 'Para asegurar que el proyecto tenga un rumbo claro, financiación y un futuro estable.',
+            scope: 'Todo el servidor, el staff y la comunidad entera.',
+            func: 'Toman las decisiones difíciles, pagan los servidores y diseñan la próxima gran actualización.'
+        },
+        'manager': {
+            title: 'Manager',
+            desc: 'Los directores de orquesta. Se aseguran de que cada departamento (moderación, construcción, configuración) trabaje en armonía.',
+            reason: 'Un proyecto tan grande necesita líderes que coordinen a las personas para evitar el caos.',
+            scope: 'Supervisan a Administradores y a todo el equipo de Staff.',
+            func: 'Resuelven problemas internos, organizan reuniones y optimizan el funcionamiento del equipo.'
+        },
+        'admin': {
+            title: 'Administrador',
+            desc: 'Los guardianes del orden. Tienen las herramientas para arreglar mundos rotos y la sabiduría para resolver conflictos graves.',
+            reason: 'Necesitamos gente de confianza máxima que pueda actuar rápido ante fallos técnicos o ataques.',
+            scope: 'Jugadores, mundos y el equipo de moderación.',
+            func: 'Mantienen el servidor técnico, gestionan eventos masivos y supervisan sanciones graves.'
+        },
+        'jradmin': {
+            title: 'Jr. Admin',
+            desc: 'Líderes en entrenamiento. Están demostrando que tienen la madurez para llevar las riendas del servidor en el futuro.',
+            reason: 'Para preparar a la siguiente generación de administradores y apoyar en la carga de trabajo.',
+            scope: 'Apoyo a Admins y mentoría a rangos bajos.',
+            func: 'Gestionan apelaciones complejas y aprenden a manejar herramientas avanzadas del servidor.'
+        },
+        'srmod': {
+            title: 'Sr. Mod',
+            desc: 'Los veteranos del chat. Han visto de todo y saben exactamente cómo aplicar las normas con justicia.',
+            reason: 'Los moderadores nuevos necesitan guías experimentados que les enseñen el camino.',
+            scope: 'Supervisan a Mods y Jr Mods.',
+            func: 'Revisan sanciones dudosas, trainan a los nuevos y manejan situaciones de alta tensión.'
+        },
+        'mod': {
+            title: 'Moderador',
+            desc: 'Los protectores de la paz. Están en primera línea asegurando que puedas jugar sin tóxicos ni hackers.',
+            reason: 'Para que tu experiencia de juego sea divertida y segura, libre de trampas e insultos.',
+            scope: 'El chat general y el comportamiento de los jugadores.',
+            func: 'Sancionan a quienes rompen las reglas, resuelven dudas y mantienen el ambiente limpio.'
+        },
+        'jrmod': {
+            title: 'Jr. Mod',
+            desc: 'Los aprendices dedicados. Acaban de unirse al equipo y están llenos de energía para ayudar y aprender.',
+            reason: 'Todo gran staff empieza desde abajo, aprendiendo las bases de la moderación.',
+            scope: 'Chat y reportes básicos.',
+            func: 'Observan, aprenden los comandos y ayudan con las dudas más frecuentes de los usuarios.'
+        },
+        'ayudante': {
+            title: 'Ayudante',
+            desc: 'Los amigos expertos. No están para castigar, sino para echarte una mano cuando no sabes cómo funciona algo.',
+            reason: 'A veces solo necesitas a alguien que sepa jugar bien para explicarte las cosas.',
+            scope: 'Jugadores nuevos y dudas generales.',
+            func: 'Responden preguntas en el chat y guían a los recién llegados por el servidor.'
+        },
+        'donator': {
+            title: 'Donador',
+            desc: 'Nuestros héroes sin capa. Gracias a su apoyo, podemos pagar la luz, el host y seguir mejorando Glorium.',
+            reason: 'Para financiar el proyecto y permitir que siga siendo gratis para todos.',
+            scope: 'Disfrutan de su experiencia VIP.',
+            func: 'Lucen cosméticos increíbles, vuelan en los lobbies y disfrutan de ventajas exclusivas.'
+        }
+    };
+
+    // Open Modal
+    roleButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const roleKey = btn.getAttribute('data-role');
+            const data = roleData[roleKey];
+
+            if (data) {
+                const titleEl = document.getElementById('modal-role-title');
+                if (titleEl) titleEl.textContent = data.title;
+
+                const descEl = document.getElementById('modal-role-description');
+                if (descEl) descEl.textContent = data.desc;
+
+                // Update New Fields
+                const reasonEl = document.getElementById('modal-role-reason');
+                if (reasonEl) reasonEl.textContent = data.reason;
+
+                const scopeEl = document.getElementById('modal-role-scope');
+                if (scopeEl) scopeEl.textContent = data.scope;
+
+                const funcEl = document.getElementById('modal-role-functions');
+                if (funcEl) funcEl.textContent = data.func;
+
+                // --- Dynamic Member List ---
+                const membersContainer = document.getElementById('modal-role-members');
+                if (membersContainer) {
+                    membersContainer.innerHTML = ''; // Clear previous
+
+                    // Find the section associated with this button
+                    // Logic: The button is inside a .role-header-container
+                    // The NEXT element sibling is likely the .staff-grid-centered
+                    const headerContainer = btn.closest('.role-header-container');
+                    const gridContainer = headerContainer ? headerContainer.nextElementSibling : null;
+
+                    if (gridContainer && gridContainer.classList.contains('staff-grid-centered')) {
+                        const members = gridContainer.querySelectorAll('.staff-name');
+                        if (members.length > 0) {
+                            members.forEach(member => {
+                                const name = member.textContent.trim();
+                                const tag = document.createElement('span');
+
+                                if (name.toLowerCase() === 'vacante') {
+                                    tag.className = 'member-tag member-vacant';
+                                    tag.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ¡Todavía no hay ${data.title}!`;
+                                } else {
+                                    tag.className = 'member-tag';
+                                    tag.textContent = name;
+                                }
+                                membersContainer.appendChild(tag);
+                            });
+                        } else {
+                            membersContainer.innerHTML = '<span style="color: #666; font-style: italic;">Sin miembros públicos actualmente.</span>';
+                        }
+                    } else {
+                        // Fallback in case structure changes
+                        membersContainer.innerHTML = '<span style="color: #666;">No se pudo cargar la lista.</span>';
+                    }
+                }
+
+                backdrop.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
+
+    // Close Modal Logic
+    function closeRoleModal() {
+        backdrop.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closeRoleModal);
+
+    // Close on click outside
+    backdrop.addEventListener('click', (e) => {
+        if (e.target === backdrop) {
+            closeRoleModal();
+        }
+    });
+}
+
+// --- Status del Servidor (Jugadores Online) ---
+function initServerStatus() {
+    const statusText = document.getElementById('player-count');
+    const statusDot = document.querySelector('.status-dot');
+
+    if (!statusText) return;
+
+    const serverIP = "glorium.fun";
+    const apiUrl = `https://api.mcsrvstat.us/2/${serverIP}`;
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.online) {
+                const count = data.players.online;
+                statusText.innerHTML = `<span style="color: #fff; font-weight: 700;">${count}</span> Jugadores Online`;
+                statusDot.classList.remove('offline');
+            } else {
+                statusText.innerHTML = "Servidor Offline";
+                statusDot.classList.add('offline');
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching server status:", error);
+            statusText.innerHTML = "Glorium Network"; // Fallback elegante
+            statusDot.classList.add('offline');
+        });
+}
+
+
+
+
+// --- Comet Trail Particles (Mouse) ---
+function initMouseParticles() {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'particle-canvas';
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '9999';
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    const trail = [];
+    const particles = []; // Explosion particles
+
+    window.addEventListener('resize', () => {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    });
+
+    // Add particle on movement
+    window.addEventListener('mousemove', (e) => {
+        
+        // Subtle Trail: Smaller, more frequent but transparent
+        trail.push({
+            x: e.clientX,
+            y: e.clientY,
+            life: 1.0,
+            size: Math.random() * 2 + 1 // Random size between 1 and 3
+        });
+    });
+
+    // Click Explosion
+    window.addEventListener('mousedown', (e) => {
+        
+        for (let i = 0; i < 12; i++) { // Fewer particles
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 2 + 0.5; // Slower explosion
+            particles.push({
+                x: e.clientX,
+                y: e.clientY,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                life: 1.0,
+                color: Math.random() > 0.6 ? '#3b82f6' : 'rgba(255, 255, 255, 0.5)'
+            });
+        }
+    });
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        
+
+        // Draw Comet Trail
+        for (let i = 0; i < trail.length; i++) {
+            const p = trail[i];
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+            // Lower opacity (0.4 max) for subtlety
+            ctx.fillStyle = `rgba(59, 130, 246, ${p.life * 0.4})`;
+            ctx.fill();
+            p.life -= 0.05; // Short tail
+        }
+
+        // Draw Explosion Particles
+        for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= 0.02;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+            ctx.fillStyle = p.color === '#3b82f6'
+                ? `rgba(59, 130, 246, ${p.life})`
+                : `rgba(255, 255, 255, ${p.life})`;
+            ctx.fill();
+        }
+
+        // Cleanup
+        for (let i = trail.length - 1; i >= 0; i--) {
+            if (trail[i].life <= 0) trail.splice(i, 1);
+        }
+        for (let i = particles.length - 1; i >= 0; i--) {
+            if (particles[i].life <= 0) particles.splice(i, 1);
+        }
+
+        requestAnimationFrame(animate);
+    }
+    animate();
+}
+
+
+
+// --- Rules Search Logic ---
+function initRulesSearch() {
+    const searchInput = document.getElementById('rules-search');
+    const ruleCards = document.querySelectorAll('.rule-card');
+
+    // Solo si estamos en la página de reglas
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase().trim();
+
+        ruleCards.forEach(card => {
+            const title = card.querySelector('.rule-title').innerText.toLowerCase();
+            const desc = card.querySelector('.rule-desc').innerText.toLowerCase();
+            const parentCategory = card.closest('.rule-category');
+
+            if (title.includes(term) || desc.includes(term)) {
+                card.style.display = 'block';
+                // Animación suave de entrada
+                card.style.animation = 'fadeInUp 0.3s ease forwards';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Ocultar categorías vacías si se desea (Opcional, pero queda mejor)
+        document.querySelectorAll('.rule-category').forEach(cat => {
+            const visibleCards = cat.querySelectorAll('.rule-card[style="display: block;"]');
+            const allCards = cat.querySelectorAll('.rule-card');
+
+            // Si el término está vacío, mostrar todo
+            if (term === '') {
+                cat.style.display = 'block';
+                return;
+            }
+
+            // Simple check: si todas las cards internas están ocultas, ocultar la categoría
+            // Nota: Este check es básico. Una mejor implementación comprobaría el computed style.
+            // Para simplificar: asumimos que si hemos puesto display:none a todas, ocultamos la cat.
+
+            let anyVisible = false;
+            allCards.forEach(c => {
+                if (c.style.display !== 'none') anyVisible = true;
+            });
+
+            cat.style.display = anyVisible ? 'block' : 'none';
+        });
+    });
+}
+
+// --- Spotlight Modal Logic (Staff del Mes) ---
+function initSpotlightModal() {
+    const fab = document.getElementById('spotlight-fab');
+    const modal = document.getElementById('spotlight-modal');
+    const closeBtn = document.getElementById('close-spotlight');
+
+    // CONFIGURACIí“N: Cambiar a 'true' cuando haya staff del mes
+    const HAS_SPOTLIGHT_MEMBERS = false;
+
+    if (!fab || !modal || !closeBtn) return;
+
+    // Si no hay staff, ocultar todo
+    if (!HAS_SPOTLIGHT_MEMBERS) {
+        fab.style.display = 'none';
+        return;
+    }
+
+    function openModal() {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    fab.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+}
+
+

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO Básico -->
+    <title>Normativa Oficial | Glorium Network</title>
+    <meta name="description"
+        content="Conoce las reglas globales y de Survival OP de Glorium Network para una convivencia pacífica e intergaláctica.">
+    <meta name="keywords" content="Minecraft, Normas, Reglas, Rules, Servidor, Survival OP, Glorium Network">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Glorium Network">
+    <link rel="canonical" href="https://web.glorium.net/pages/rules.html">
+
+    <!-- Open Graph / Discord / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://web.glorium.net/pages/rules.html">
+    <meta property="og:title" content="Normativa Oficial | Glorium Network">
+    <meta property="og:description"
+        content="Lee las reglas obligatorias de Glorium Network para una convivencia sana en el servidor.">
+    <meta property="og:image" content="https://web.glorium.net/assets/logoprincipal.png">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://web.glorium.net/pages/rules.html">
+    <meta name="twitter:title" content="Normativa Oficial | Glorium Network">
+    <meta name="twitter:description"
+        content="Lee las reglas obligatorias de Glorium Network para una convivencia sana en el servidor.">
+    <meta name="twitter:image" content="https://web.glorium.net/assets/logoprincipal.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" type="image/png" href="../assets/logoprincipal.png">
+    <style>
+        .tabs-header {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 15px 40px;
+            border-radius: 50px;
+            color: var(--text-dim);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn i {
+            font-size: 1.2rem;
+        }
+
+        .tab-btn.active,
+        .tab-btn:hover {
+            background: var(--primary-blue);
+            color: var(--bg-space-dark);
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .rule-category {
+            background: rgba(15, 15, 20, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .rule-category:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .rule-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-gold);
+        }
+
+        .rule-category h3 {
+            color: var(--primary-blue);
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: left;
+        }
+
+        .rule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .rule-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            transition: 0.3s;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .rule-card:hover {
+            background: rgba(59, 130, 246, 0.05);
+            border-color: rgba(59, 130, 246, 0.2);
+            transform: translateX(5px);
+        }
+
+        .rule-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 15px;
+            bottom: 15px;
+            width: 3px;
+            background: var(--primary-blue);
+            border-radius: 0 3px 3px 0;
+            opacity: 0.5;
+        }
+
+        .rule-card:hover::before {
+            opacity: 1;
+        }
+
+        .rule-title {
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            display: block;
+            font-size: 1.05rem;
+            font-family: 'Rajdhani', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .rule-desc {
+            color: var(--text-dim);
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .alert-box {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 15px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .alert-icon {
+            font-size: 2rem;
+            color: var(--primary-blue);
+            padding-top: 5px;
+        }
+
+        /* Estilo para items individuales */
+        .rule-list-item {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .rule-list-item i {
+            color: var(--primary-blue);
+            margin-top: 5px;
+            font-size: 0.8rem;
+        }
+
+        .rule-text {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+
+    <header class="hero" style="min-height: 50vh; padding-top: 150px;">
+        <div class="container mobile-pad">
+            <h1 class="hero-title">Normativa Oficial</h1>
+            <p class="hero-subtitle">El cumplimiento de estas reglas es obligatorio. Lee atentamente cada sección.</p>
+        </div>
+    </header>
+
+    <section class="section" style="padding-top: 0;">
+        <div class="container" style="max-width: 1200px;">
+
+            <!-- Buscador de Reglas -->
+            <div class="rules-search-container">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="rules-search" placeholder="Buscar regla (ej. hacks, spam, estafas)...">
+            </div>
+
+            <!-- Botones de Navegación de Pestañas -->
+            <div class="tabs-header">
+                <div class="tab-btn active" data-target="general">
+                    <i class="fa-solid fa-scroll"></i> Reglas Globales (Glorium)
+                </div>
+                <div class="tab-btn" data-target="survival">
+                    <i class="fa-solid fa-tree"></i> Survival OP
+                </div>
+            </div>
+
+            <!-- Pestaña 1: Reglas Generales -->
+            <div id="general" class="tab-content active">
+
+                <div class="alert-box">
+                    <div class="alert-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                    <div>
+                        <h4 style="color: var(--text-light); margin-bottom: 10px; text-align: left; font-size: 1.2rem;">
+                            Principios Fundamentales</h4>
+                        <p style="color: var(--text-dim); line-height: 1.6;">
+                            Al jugar en Glorium Network aceptas íntegramente todas las normas. El desconocimiento no
+                            exime de cumplimiento.
+                            La administración se reserva el derecho de admisión y modificación de reglas sin previo
+                            aviso.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="rule-category">
+                    <h3><i class="fa-solid fa-user-shield"></i> 1. Relación con el Staff y Administración</h3>
+                    <div class="rule-grid">
+                        <div class="rule-card">
+                            <span class="rule-title">1.1 Autoridad del Staff</span>
+                            <p class="rule-desc">Las indicaciones del Staff deben ser acatadas siempre,
+                                independientemente de opiniones personales.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">1.2 Respeto al Equipo</span>
+                            <p class="rule-desc">Prohibido faltar al respeto, burlarse, amenazar o actuar con
+                                prepotencia hacia cualquier miembro del Staff.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">1.3 Difamación</span>
+                            <p class="rule-desc">Prohibido desacreditar el trabajo del Staff o acusarlos públicamente
+                                sin pruebas verificables.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">1.4 Suplantación de Staff</span>
+                            <p class="rule-desc">Es falta grave hacerse pasar por miembro del Staff o usar su nombre
+                                para amenazar a otros usuarios.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">1.5 Engaño al Staff</span>
+                            <p class="rule-desc">Prohibido mentir al Staff, manipular pruebas o situaciones para evitar
+                                sanciones o banear a otros.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">1.6 Reportes Correctos</span>
+                            <p class="rule-desc">Los reportes de abuso de Staff deben hacerse vía Ticket con pruebas
+                                claras, no en chat público.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rule-category">
+                    <h3><i class="fa-solid fa-comments"></i> 2. Chat y Convivencia</h3>
+                    <div class="rule-grid">
+                        <div class="rule-card">
+                            <span class="rule-title">2.1 Spam y Flood</span>
+                            <p class="rule-desc">Prohibido inundar el chat (flood), abusar de mayúsculas, o enviar
+                                mensajes repetitivos.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">2.2 Publicidad (IPs)</span>
+                            <p class="rule-desc">Prohibido compartir IPs de otros servidores o enlaces externos con
+                                intención de publicitar.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">2.3 Acoso y Bullying</span>
+                            <p class="rule-desc">Cero tolerancia al acoso (bullying), insultos graves o persecución a
+                                otros jugadores.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">2.4 Discriminación</span>
+                            <p class="rule-desc">Prohibido el racismo, sexismo, homofobia, xenofobia o cualquier
+                                discurso de odio.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">2.5 Contenido Inapropiado</span>
+                            <p class="rule-desc">Prohibido difundir o bromear sobre contenido sexual (+18), erótico,
+                                violento o sensible.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">2.6 Toxicidad</span>
+                            <p class="rule-desc">Prohibido fomentar discusiones tóxicas, drama intencional o polémicas
+                                innecesarias.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">2.7 Doxing (Privacidad)</span>
+                            <p class="rule-desc" style="color: #ff5555; font-weight: bold;">EXTREMADAMENTE PROHIBIDO
+                                compartir fotos, direcciones o nombres reales de usuarios sin su permiso.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">2.8 Idiomas</span>
+                            <p class="rule-desc">Solo se permite hablar en Español o Inglés para asegurar la correcta
+                                moderación.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rule-category">
+                    <h3><i class="fa-solid fa-robot"></i> 3. Clientes, Hacks y Seguridad</h3>
+                    <div class="rule-grid">
+                        <div class="rule-card">
+                            <span class="rule-title">3.1 Hacks Prohibidos</span>
+                            <p class="rule-desc">Uso de KillAura, Fly (sin rango), X-Ray, Autoclicker, Macros, etc.,
+                                está totalmente prohibido.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">3.2 Clientes Permitidos</span>
+                            <p class="rule-desc">Optifine, LabyMod, Badlion, Lunar, Feather (sin cheats). Minimapas SIN
+                                radar de jugadores.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">3.3 Inspecciones (SS)</span>
+                            <p class="rule-desc">Negarse a una SS (AnyDesk), desconectarse, o borrar archivos (papelera)
+                                durante el proceso es BAN.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">3.4 VPN y Proxies</span>
+                            <p class="rule-desc">Prohibido el uso de VPNs para ocultar identidad o evadir sanciones.
+                                Serán bloqueadas.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">3.5 Multicuentas</span>
+                            <p class="rule-desc">Prohibido usar múltiples cuentas para evadir sanciones u obtener
+                                ventajas injustas.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">3.6 Residuos de Cheats</span>
+                            <p class="rule-desc">Hallar residuos de hacks antiguos en tu PC durante una SS puede ser
+                                motivo de sanción.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rule-category">
+                    <h3><i class="fa-solid fa-coins"></i> 4. Economía y Cuentas</h3>
+                    <div class="rule-grid">
+                        <div class="rule-card">
+                            <span class="rule-title">4.1 Comercio Real (RMT)</span>
+                            <p class="rule-desc">Prohibido vender items, dinero o cuentas por dinero real (PayPal, etc).
+                                Solo comercio in-game.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">4.2 Estafas en RMT</span>
+                            <p class="rule-desc">Cualquier intento de lucro aprovechando los servicios del servidor es
+                                falta muy grave.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">4.3 Responsabilidad</span>
+                            <p class="rule-desc">Eres 100% responsable de tu cuenta. "Fue mi hermano" no es excusa.</p>
+                        </div>
+                        <div class="rule-card">
+                            <span class="rule-title">4.4 Robo de Cuentas</span>
+                            <p class="rule-desc">El robo o intento de acceso a cuentas ajenas será sancionado con
+                                severidad.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pestaña 2: Reglas de Survival -->
+            <div id="survival" class="tab-content">
+
+                <div class="alert-box"
+                    style="background: rgba(43, 196, 255, 0.1); border-color: rgba(43, 196, 255, 0.3);">
+                    <div class="alert-icon" style="color: #2bc4ff;"><i class="fa-solid fa-earth-americas"></i></div>
+                    <div>
+                        <h4 style="color: var(--text-light); margin-bottom: 5px; text-align: left; font-size: 1.2rem;">
+                            Survival OP</h4>
+                        <p style="color: var(--text-dim);">Reglamento específico para la modalidad Survival OP.</p>
+                    </div>
+                </div>
+
+                <!-- Contenido vacío pendiente de reglas oficiales -->
+                <div style="text-align: center; padding: 50px 20px;">
+                    <i class="fa-solid fa-file-contract" style="font-size: 4rem; color: var(--primary-blue); margin-bottom: 20px; opacity: 0.5;"></i>
+                    <h3 style="color: var(--text-light); margin-bottom: 10px;">Normativas en redacción</h3>
+                    <p style="color: var(--text-dim);">Próximamente publicaremos el reglamento oficial completo para la modalidad de Survival OP.</p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <div id="footer-container"></div>
+    <script src="../main.js"></script>
+</body>
+
+</html>

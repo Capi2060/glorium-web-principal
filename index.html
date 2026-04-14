@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO Básico -->
+    <title>Glorium Network | Servidor de Minecraft Survival OP 1.20 - 1.21</title>
+    <meta name="description"
+        content="Glorium Network es un servidor de Minecraft Survival OP 1.20 - 1.21 para Java y Bedrock. Economía, Clanes, Misiones, Subastas y una comunidad estelar.">
+    <meta name="keywords"
+        content="Minecraft, Servidor, Server, Survival OP, Java, Bedrock, 1.20, 1.21, Glorium Network, Español, Economía, Clanes, Protección">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Glorium Network">
+    <link rel="canonical" href="https://web.glorium.net/index.html">
+
+    <!-- Open Graph / Discord / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://web.glorium.net/index.html">
+    <meta property="og:title" content="Glorium Network | Survival OP 1.20 - 1.21">
+    <meta property="og:description" content="Únete a la mejor experiencia Survival OP. ¡Java y Bedrock soportados!">
+    <meta property="og:image" content="https://web.glorium.net/assets/logoprincipal.png">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://web.glorium.net/index.html">
+    <meta name="twitter:title" content="Glorium Network | Survival OP">
+    <meta name="twitter:description"
+        content="Únete a la mejor experiencia Survival OP. ¡Java y Bedrock soportados!">
+    <meta name="twitter:image" content="https://web.glorium.net/assets/logoprincipal.png">
+    <!-- Fuentes e Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Mis Estilos CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="assets/logoprincipal.png">
+</head>
+
+<body>
+
+    <!-- Aquí va el Navbar (se carga con JS para no repetir código) -->
+    <div id="navbar-container"></div>
+
+    <!-- Sección Hero (La portada principal) -->
+    <header class="hero">
+        <div class="hero-content container">
+            <img src="assets/logoprincipal.png" alt="Glorium Network Logo" class="hero-logo">
+            <h1 class="hero-title">Comienza tu Aventura</h1>
+            <p class="hero-subtitle">Survival OP • 1.10 - 1.21 • Java & Bedrock</p>
+
+            <div class="ip-box" onclick="copyIP()">
+                <i class="fa-solid fa-gamepad ip-icon"></i>
+                <div class="ip-details">
+                    <span class="ip-label"
+                        style="display:block; font-size: 0.8rem; color: var(--primary-blue); text-align: left;">IP DEL
+                        SERVIDOR</span>
+                    <span class="ip-text">glorium.fun</span>
+                </div>
+                <i class="fa-regular fa-copy" style="margin-left: 10px; opacity: 0.7;"></i>
+            </div>
+
+            <!-- Contador de Jugadores -->
+            <div id="server-status" class="server-status-pill">
+                <span class="status-dot"></span>
+                <span id="player-count">Cargando...</span>
+            </div>
+
+            <div class="hero-buttons">
+                <a href="https://glorium-network.tebex.io/" target="_blank" class="btn btn-primary">Tienda</a>
+                <a href="https://discord.gg/AcNusmyx" target="_blank" class="btn btn-secondary">Discord</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sección Info del Server (Relleno visual premium) -->
+    <section class="section info-section" style="padding-top: 0;">
+        <div class="container">
+
+            <!-- Bloque 1: Qué es Glorium -->
+            <div class="info-block">
+                <div class="info-content">
+                    <h2>¿Qué es Glorium?</h2>
+                    <p>Glorium Network no es solo un servidor de Minecraft; es una <strong>experiencia
+                            inmersiva</strong> diseñada para jugadores que buscan más allá de lo convencional.</p>
+                    <p>Nacido de la fusión entre la creatividad técnica y el amor por el Survival Clásico, ofrecemos un
+                        entorno seguro, justo y libre de lag para las versiones <strong>1.10 - 1.21</strong> en Java y
+                        Bedrock.</p>
+                    <a href="pages/rules.html" class="btn btn-secondary" style="margin-top: 20px;">Leer Normas</a>
+                </div>
+                <div class="info-visual">
+                    <div class="info-visual-card" style="display: flex; justify-content: center; align-items: center; background: transparent; padding: 50px;">
+                        <i class="fa-solid fa-server" style="font-size: 8rem; color: var(--primary-blue); filter: drop-shadow(0 0 20px var(--primary-blue));"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloque 2: La Comunidad -->
+            <div class="info-block reverse">
+                <div class="info-content">
+                    <h2>Una Gran Comunidad</h2>
+                    <p>En el corazón de nuestro servidor están los jugadores. Fomentamos un ambiente
+                        <strong>no-tóxico</strong> y competitivo sanamente, donde cada construcción y cada alianza
+                        cuenta.
+                    </p>
+                    <p>Contamos con eventos semanales, torneos PVP y un equipo de Staff siempre activo para moderar y
+                        ayudar en tu aventura.</p>
+                    <a href="https://discord.gg/AcNusmyx" target="_blank" class="btn btn-primary"
+                        style="margin-top: 20px;">Unirse al Discord</a>
+                </div>
+                <div class="info-visual">
+                    <div class="info-visual-card" style="display: flex; justify-content: center; align-items: center; background: transparent; padding: 50px;">
+                        <i class="fa-solid fa-users" style="font-size: 8rem; color: var(--primary-blue); filter: drop-shadow(0 0 20px var(--primary-blue));"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloque 3: Economía Espacial -->
+            <div class="info-block">
+                <div class="info-content">
+                    <h2>Economía Dinámica</h2>
+                    <p>Un sistema de economía único y justo diseñado para el comercio global. ¡Consigue infinidad
+                        de dinero, crea tiendas y domina el mercado del servidor!</p>
+                </div>
+                <div class="info-visual">
+                    <div class="info-visual-card" style="display: flex; justify-content: center; align-items: center; background: transparent; padding: 50px;">
+                        <i class="fa-solid fa-coins" style="font-size: 8rem; color: var(--primary-blue); filter: drop-shadow(0 0 20px var(--primary-blue));"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloque 4: Unión de Mundos -->
+            <div class="info-block reverse">
+                <div class="info-content">
+                    <h2>Unión de Mundos (Cross-play)</h2>
+                    <p>Rompe las barreras de la plataforma. En Glorium, los jugadores de <strong>Java</strong> y
+                        <strong>Bedrock</strong> conviven en el mismo mundo. Juega con tus amigos sin importar si
+                        están en PC, móvil o consola.
+                    </p>
+                </div>
+                <div class="info-visual">
+                    <div class="info-visual-card" style="display: flex; justify-content: center; align-items: center; background: transparent; padding: 50px;">
+                        <i class="fa-solid fa-gamepad" style="font-size: 8rem; color: var(--primary-blue); filter: drop-shadow(0 0 20px var(--primary-blue));"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloque 5: Protección Avanzada -->
+            <div class="info-block">
+                <div class="info-content">
+                    <h2>Protección Avanzada</h2>
+                    <p>Tu base es tu fortaleza. Contamos con piedras de protección muy variadas para que tus
+                        construcciones estén 100% seguras mientras exploras el mundo. ¡Juega tranquilo!</p>
+                </div>
+                <div class="info-visual">
+                    <div class="info-visual-card" style="display: flex; justify-content: center; align-items: center; background: transparent; padding: 50px;">
+                        <i class="fa-solid fa-shield-halved" style="font-size: 8rem; color: var(--primary-blue); filter: drop-shadow(0 0 20px var(--primary-blue));"></i>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Aquí va el Footer (Pie de página) -->
+    <div id="footer-container"></div>
+
+    <!-- Scripts Principales -->
+    <script src="main.js"></script>
+</body>
+
+</html>
